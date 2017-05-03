@@ -37,6 +37,11 @@ test_df<-cbind(Test_subjects, Testing_Activity, Testing_measurments)
 
 Activity_experiment_df<-rbind.data.frame(train_df, test_df)
 
+# Select only measurments of mean and standard deviation
+
+Activity_experiment_df<- select(Activity_experiment_df, Subjects, Activity_type, contains("mean"), contains("std"))
+print(Activity_experiment_df)
+
 # Replace activities annotation with activity names
 # TODO: Find a way to replace element annotations in one command
 
@@ -46,6 +51,7 @@ Activity_experiment_df$Activity_type<-gsub("3","WALKING_DOWNSTAIRS", Activity_ex
 Activity_experiment_df$Activity_type<-gsub("4","SITTING", Activity_experiment_df$Activity_type)
 Activity_experiment_df$Activity_type<-gsub("5","STANDING", Activity_experiment_df$Activity_type)
 Activity_experiment_df$Activity_type<-gsub("6", "LAYING", Activity_experiment_df$Activity_type)
+
 
 # Change to tbl_df file
 Activity_experiment_df<-tbl_df(Activity_experiment_df)
@@ -59,4 +65,6 @@ Grouped_experiment_results<-group_by(Activity_experiment_df, Subjects, Activity_
 Mean_experiment_results<-summarise_each(Grouped_experiment_results, funs(mean))
 
 print(Mean_experiment_results)
+
+write.table(Mean_experiment_results, "./TidyData", row.name=FALSE)
 
